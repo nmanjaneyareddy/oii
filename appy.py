@@ -3,11 +3,20 @@ from loaders import load_documents, split_documents
 from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
+import re
+
+def clean_answer(text):
+    # Remove instructions and labels like "Context:" and "Answer:"
+    text = re.sub(r"(?i)(use the following.*?answer:)", "", text, flags=re.DOTALL)
+    text = re.sub(r"(?i)^context:|^answer:", "", text)
+    return text.strip()
+
+answer = clean_answer(result.get("result", ""))
 
 # 🎛️ Streamlit page setup
-st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
+st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="")
 st.title("🤖 IGIDRLIB Chatbot")
-st.markdown("Ask any question related to the IGIDR Library.")
+st.markdown("Ask any question about IGIDR Library.")
 
 # 📦 Load or build vectorstore
 if not os.path.exists("faiss_index"):
