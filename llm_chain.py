@@ -4,14 +4,12 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 def setup_qa_chain(vectorstore):
-    repo_id = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
-    token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+    repo_id = "tiiuae/falcon-7b-instruct"
 
-    # HuggingFace model setup
     llm = HuggingFaceHub(
-        repo_id=repo_id,
-        huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
+    repo_id=repo_id,
+    huggingfacehub_api_token=st.secrets["HUGGINGFACEHUB_API_TOKEN"],
+    model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
     )
 
     # Clean prompt — no verbose instructions
