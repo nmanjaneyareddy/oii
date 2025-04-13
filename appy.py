@@ -51,6 +51,6 @@ if user_input:
 # 💬 Display chat history
 for role, msg in st.session_state.chat_history:
     if role == "user":
-        st.chat_message("user").write(f"❓ {msg}")
+        st.chat_message("user").write(f"Me {msg}")
     else:
-        st.chat_message("assistant").write(f"🤖 {msg}")
+        st.chat_message("assistant").write(f"LibAI Assistant {msg}")
