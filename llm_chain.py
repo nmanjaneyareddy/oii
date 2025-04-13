@@ -15,13 +15,12 @@ def setup_qa_chain(vectorstore):
 
     # ✅ Minimal, clean prompt: no instructions, no context message
     prompt = PromptTemplate(
-        input_variables=["context", "question"],
+        input_variables=["question"],
         template="""
-{context}
 
 Question: {question}
 
-Answer only the question above in 1–2 sentences:
+Answer:
 """
     )
 
