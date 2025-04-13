@@ -4,11 +4,10 @@ from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
 
-st.set_page_config(page_title="IGIDR Library Chatbot", page_icon="📚")
-st.title("📚 IGIDRLIB Chatbot")
-st.write("Ask any question about IGIDR Library")
+st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
+st.title("🤖 IGIDRLIB Chatbot")
 
-# Step 1: Load or build vectorstore
+# Load or build vectorstore
 if not os.path.exists("faiss_index"):
     with st.spinner("Processing documents..."):
         docs = load_documents()
@@ -17,18 +16,37 @@ if not os.path.exists("faiss_index"):
 else:
     vectorstore = load_vector_store()
 
-# Step 2: Load LLM QA chain
+# Load QA Chain
 qa_chain = setup_qa_chain(vectorstore)
 
-# Step 3: Chat interface
-query = st.text_input("Ask about IGIDR Library")
+# Initialize chat history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-if query:
-    with st.spinner("Generating answer..."):
-        result = qa_chain({"query": query})
+# Chat-style input
+user_input = st.chat_input("Ask me about IGIDR Library...")
+
+if user_input:
+    with st.spinner("🤖 Thinking..."):
+        result = qa_chain({"query": user_input})
         answer = result["result"].strip()
 
-        st.markdown("### ❓ **Question**")
-        st.write(query)
-        st.markdown("### 🤖 **Answer**")
-        st.write(answer)
+        # Optional: strip known verbose starts
+        for prefix in [
+            "Based on the context", 
+            "According to the documents",
+            "Use the following pieces"
+        ]:
+            if answer.lower().startswith(prefix.lower()):
+                answer = answer.split(":", 1)[-1].strip()
+
+        # Save to chat history
+        st.session_state.chat_history.append(("user", user_input))
+        st.session_state.chat_history.append(("bot", answer))
+
+# Render chat history
+for role, msg in st.session_state.chat_history:
+    if role == "user":
+        st.chat_message("user").write(msg)
+    else:
+        st.chat_message("assistant").write(msg)
