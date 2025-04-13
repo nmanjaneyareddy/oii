@@ -17,8 +17,8 @@ if not os.path.exists("faiss_index"):
 else:
     vectorstore = load_vector_store()
 
-# Step 2: Load LLM QA chain
-qa_chain = setup_qa_chain(vectorstore)
+# Step 2: Load LLM QA chain with concise mode
+qa_chain = setup_qa_chain(vectorstore, concise=True)  # Assume concise=True triggers a short-answer prompt in your chain
 
 # Step 3: Chat interface
 query = st.text_input("Ask about IGIDR Library")
@@ -28,14 +28,20 @@ if query:
         result = qa_chain({"query": query})
         answer = result["result"].strip()
 
-        # Optional: Strip verbose patterns (last filter)
-        for prefix in [
-            "Based on the context", 
+        # Remove verbose prefaces
+        prefixes_to_strip = [
+            "Based on the context",
             "According to the documents",
-            "Use the following pieces of context"
-        ]:
+            "Use the following pieces of context",
+            "Here's what I found"
+        ]
+        for prefix in prefixes_to_strip:
             if answer.lower().startswith(prefix.lower()):
                 answer = answer.split(":", 1)[-1].strip()
+
+        # Keep only the first sentence (optional)
+        if "." in answer:
+            answer = answer.split(".")[0].strip() + "."
 
         st.markdown("### ❓ **Question**")
         st.write(query)
