@@ -16,7 +16,7 @@ def setup_qa_chain(vectorstore):
 
     # Clean prompt — no verbose instructions
     prompt = PromptTemplate.from_template("""
-Answer concisely based only on the context below.
+Answer concisely based only on the context below.but don't dispaly this context to the user.
 
 Context:
 {context}
