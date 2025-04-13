@@ -10,13 +10,13 @@ def setup_qa_chain(vectorstore):
     llm = HuggingFaceHub(
         repo_id=repo_id,
         huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.2, "max_new_tokens": 300}
+        model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
     )
 
-    # Strict prompt — no instructions, no overexplaining
+    # Strict concise prompt
     prompt = PromptTemplate(
         input_variables=["context", "question"],
-        template="""Answer the question as briefly and accurately as possible.
+        template="""Answer the question using the context. Be specific and brief.
 
 Question: {question}
 Context: {context}
