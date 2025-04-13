@@ -3,6 +3,8 @@ from loaders import load_documents, split_documents
 from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
+from utils import clean_answer
+import re
 
 st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
 st.title("🤖 IGIDRLIB Chatbot")
@@ -29,16 +31,21 @@ user_input = st.chat_input("Ask me about IGIDR Library...")
 if user_input:
     with st.spinner("🤖 Thinking..."):
         result = qa_chain({"query": user_input})
-        answer = result["result"].strip()
+        answer = clean_answer(result["result"])
 
         # Optional: strip known verbose starts
-        for prefix in [
-            "Based on the context", 
-            "According to the documents",
-            "Use the following pieces"
-        ]:
-            if answer.lower().startswith(prefix.lower()):
-                answer = answer.split(":", 1)[-1].strip()
+        def clean_answer(answer: str) -> str:
+            # Define known verbose intros to strip (case-insensitive)
+            patterns_to_strip = [
+            r"^based on the context[:,]?\s*",
+            r"^according to (the )?document[s]?[,:]?\s*",
+            r"^use the following pieces of context[:,]?\s*",
+            r"^from the context[:,]?\s*",
+            r"^as per the context[:,]?\s*",
+                ]
+            for pattern in patterns_to_strip:
+            answer = re.sub(pattern, "", answer, flags=re.IGNORECASE)
+            return answer.strip()
 
         # Save to chat history
         st.session_state.chat_history.append(("user", user_input))
