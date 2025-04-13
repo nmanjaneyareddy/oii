@@ -3,7 +3,6 @@ from loaders import load_documents, split_documents
 from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
-import re
 
 # 🎛️ Streamlit page setup
 st.set_page_config(page_title="📚 IGIDRLib Chatbot", page_icon="")
@@ -25,16 +24,6 @@ qa_chain = setup_qa_chain(vectorstore)
 # 💬 Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-
-
-def clean_answer(text):
-    # Remove instructions and labels like "Context:" and "Answer:"
-    text = re.sub(r"(?i)(use the following.*?answer:)", "", text, flags=re.DOTALL)
-    text = re.sub(r"(?i)^context:|^answer:", "", text)
-    return text.strip()
-
-answer = clean_answer(result.get("result", ""))
-
 
 # 📩 User chat input
 user_input = st.chat_input("Ask about IGIDR Library...")
