@@ -7,21 +7,30 @@ def setup_qa_chain(vectorstore):
     repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
     huggingfacehub_api_token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
+    # 🔧 Adjusted to limit verbosity
     llm = HuggingFaceHub(
         repo_id=repo_id,
         huggingfacehub_api_token=huggingfacehub_api_token,
-        model_kwargs={"temperature": 0.2, "max_new_tokens": 512}
+        model_kwargs={
+            "temperature": 0.0,           # Deterministic
+            "max_new_tokens": 100         # Short and crisp output
+        }
     )
 
-    # ✅ Minimal clean prompt (no context instructions)
-    custom_prompt = PromptTemplate(
+    # 📝 Concise prompt for short answers
+    concise_prompt = PromptTemplate(
         input_variables=["context", "question"],
         template="""
-Answer the following question based only on the provided context.
+You are an assistant for the IGIDR Library.
+Using only the context below, answer the question in one clear and concise sentence.
 
-Question: {question}
-Context: {context}
-Answer:
+Context:
+{context}
+
+Question:
+{question}
+
+Short Answer:
 """
     )
 
@@ -29,8 +38,8 @@ Answer:
         llm=llm,
         retriever=vectorstore.as_retriever(),
         chain_type="stuff",
-        chain_type_kwargs={"prompt": custom_prompt},
-        return_source_documents=False  # ✅ disables source chunks
+        chain_type_kwargs={"prompt": concise_prompt},
+        return_source_documents=False
     )
 
     return qa_chain
