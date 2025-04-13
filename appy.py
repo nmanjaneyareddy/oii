@@ -4,7 +4,8 @@ from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
 
-st.title("📚 IGIDRLIB Chatbot)")
+st.set_page_config(page_title="IGIDR Library Chatbot", page_icon="📚")
+st.title("📚 IGIDRLIB Chatbot")
 st.write("Ask any question about IGIDR Library")
 
 # Step 1: Load or build vectorstore
@@ -25,9 +26,18 @@ query = st.text_input("Ask about IGIDR Library")
 if query:
     with st.spinner("Generating answer..."):
         result = qa_chain({"query": query})
-        
+        answer = result["result"].strip()
+
+        # Optional: Strip verbose patterns (last filter)
+        for prefix in [
+            "Based on the context", 
+            "According to the documents",
+            "Use the following pieces of context"
+        ]:
+            if answer.lower().startswith(prefix.lower()):
+                answer = answer.split(":", 1)[-1].strip()
+
         st.markdown("### ❓ **Question**")
         st.write(query)
-        
         st.markdown("### 🤖 **Answer**")
-        st.write(result["result"])
+        st.write(answer)
