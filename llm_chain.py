@@ -7,14 +7,16 @@ def setup_qa_chain(vectorstore):
     repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
     token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
+    # HuggingFace model setup
     llm = HuggingFaceHub(
         repo_id=repo_id,
         huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.2, "max_new_tokens": 512}
+        model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
     )
 
+    # Clean prompt — no verbose instructions
     prompt = PromptTemplate.from_template("""
-Answer the question based on the context below.
+Answer concisely based only on the context below.
 
 Context:
 {context}
@@ -27,14 +29,15 @@ Answer:
 
     parser = StrOutputParser()
 
-    # Combine components using LCEL
+    # Chain together prompt → model → parser
     chain = prompt | llm | parser
 
-    # Wrap the chain inside RetrievalQA-style interface
+    # Wrap this into a callable function
     def qa_chain(input_dict):
         retriever = vectorstore.as_retriever()
         docs = retriever.get_relevant_documents(input_dict["query"])
         context = "\n\n".join(doc.page_content for doc in docs)
-        return {"result": chain.invoke({"context": context, "question": input_dict["query"]})}
+        result = chain.invoke({"context": context, "question": input_dict["query"]})
+        return {"result": result.strip()}
 
     return qa_chain
