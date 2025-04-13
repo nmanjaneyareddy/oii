@@ -1,43 +1,25 @@
-import streamlit as st
-from langchain_community.llms import HuggingFaceHub
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import OllamaLLM  # or use HuggingFaceHub if needed
 
 def setup_qa_chain(vectorstore):
-    repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
-    token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+    # ✅ Use Ollama locally (replace with HuggingFaceHub if needed)
+    llm = OllamaLLM(model="mistral")  # you can replace this with `HuggingFaceHub(...)`
 
-    # HuggingFace model setup
-    llm = HuggingFaceHub(
-        repo_id=repo_id,
-        huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
-    )
-
-    # Clean prompt — no verbose instructions
-    prompt = PromptTemplate.from_template("""
-Answer concisely based only on the context below.
-
-Context:
-{context}
-
-Question:
-{question}
-
-Answer:
-""")
+    # ✅ Chat-style prompt — cleaner and natural
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are an assistant answering questions about a library. Be brief and to the point."),
+        ("user", "Use the following context to answer the question:\n\n{context}\n\nQuestion: {question}")
+    ])
 
     parser = StrOutputParser()
-
-    # Chain together prompt → model → parser
     chain = prompt | llm | parser
 
-    # Wrap this into a callable function
+    # Wrapper to integrate with your app
     def qa_chain(input_dict):
         retriever = vectorstore.as_retriever()
         docs = retriever.get_relevant_documents(input_dict["query"])
         context = "\n\n".join(doc.page_content for doc in docs)
-        result = chain.invoke({"context": context, "question": input_dict["query"]})
-        return {"result": result.strip()}
+        return {"result": chain.invoke({"context": context, "question": input_dict["query"]}).strip()}
 
     return qa_chain
