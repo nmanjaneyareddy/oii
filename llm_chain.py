@@ -13,7 +13,7 @@ def setup_qa_chain(vectorstore):
         huggingfacehub_api_token=token,
         model_kwargs={
             "temperature": 0.2,
-            "max_new_tokens": 1000
+            "max_new_tokens": 512
         }
     )
 
