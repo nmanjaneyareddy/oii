@@ -7,16 +7,28 @@ import re
 
 # ✅ Define cleanup function at the top
 def clean_answer(answer: str) -> str:
+    # Remove verbose intros
     patterns_to_strip = [
-        r"^based on the context[:,]?\s*",
-        r"^according to (the )?document[s]?[,:]?\s*",
-        r"^use the following pieces of context[:,]?\s*",
+        r"^answer\s*[:,]?\s*",
+        r"^based on .*?[.:]?\s*",
+        r"^according to .*?[.:]?\s*",
+        r"^use the following .*?[.:]?\s*",
         r"^from the context[:,]?\s*",
-        r"^as per the context[:,]?\s*",
+        r"^as per .*?[.:]?\s*",
+        r"^the context .*?[.:]?\s*",
+        r"^here is the answer[:,]?\s*"
     ]
     for pattern in patterns_to_strip:
         answer = re.sub(pattern, "", answer, flags=re.IGNORECASE)
-    return answer.strip()
+
+    # Remove empty lines and trim
+    lines = answer.strip().splitlines()
+    lines = [line.strip() for line in lines if line.strip()]
+    cleaned = " ".join(lines)
+
+    # Optional: Truncate to 2 sentences max
+    sentences = re.split(r"(?<=[.!?])\s+", cleaned)
+    return " ".join(sentences[:2]).strip()
 
 # Streamlit UI setup
 st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
