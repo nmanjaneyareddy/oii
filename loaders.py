@@ -1,4 +1,4 @@
-from langchain.document_loaders import PyPDFLoader, BSHTMLLoader
+from langchain_community.document_loaders import PyPDFLoader, BSHTMLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def load_documents():
