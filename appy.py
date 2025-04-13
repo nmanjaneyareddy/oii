@@ -1,43 +1,45 @@
 import streamlit as st
-from langchain_community.llms import HuggingFaceHub
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from loaders import load_documents, split_documents
+from vectorstore import create_vector_store, load_vector_store
+from llm_chain import setup_qa_chain
+import os
 
-def setup_qa_chain(vectorstore):
-    repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
-    token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+# 🎛️ Streamlit page setup
+st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
+st.title("🤖 IGIDRLIB Chatbot")
+st.markdown("Ask any question related to the IGIDR Library.")
 
-    # Initialize the language model from Hugging Face
-    llm = HuggingFaceHub(
-        repo_id=repo_id,
-        huggingfacehub_api_token=token,
-        model_kwargs={
-            "temperature": 0.2,
-            "max_new_tokens": 512
-        }
-    )
+# 📦 Load or build vectorstore
+if not os.path.exists("faiss_index"):
+    with st.spinner("🔄 Processing documents..."):
+        docs = load_documents()
+        chunks = split_documents(docs)
+        vectorstore = create_vector_store(chunks)
+else:
+    vectorstore = load_vector_store()
 
-    # A mild custom prompt that gives enough flexibility to the LLM
-    prompt = PromptTemplate(
-        input_variables=["context", "question"],
-        template="""
-Use the following context to answer the user's question.
+# 🤖 Setup QA chain
+qa_chain = setup_qa_chain(vectorstore)
 
-Context:
-{context}
+# 💬 Initialize chat history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-Question:
-{question}
+# 📩 User chat input
+user_input = st.chat_input("Ask about IGIDR Library...")
 
-Answer:
-"""
-    )
+if user_input:
+    with st.spinner("🤖 Thinking..."):
+        result = qa_chain({"query": user_input})
+        answer = result.get("result", "").strip()
 
-    # Create a RetrievalQA chain with this prompt
-    return RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=vectorstore.as_retriever(),
-        chain_type="stuff",
-        chain_type_kwargs={"prompt": prompt},
-        return_source_documents=False
-    )
+        # Save to session chat history
+        st.session_state.chat_history.append(("user", user_input))
+        st.session_state.chat_history.append(("bot", answer))
+
+# 💬 Display chat history
+for role, msg in st.session_state.chat_history:
+    if role == "user":
+        st.chat_message("user").write(msg)
+    else:
+        st.chat_message("assistant").write(f"🤖 {msg}")
