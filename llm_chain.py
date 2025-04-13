@@ -4,7 +4,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 def setup_qa_chain(vectorstore):
-    repo_id = "HuggingFaceH4/zephyr-7b-alpha"
+    repo_id = "deepseek-ai/DeepSeek-V3-0324"
     token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     # HuggingFace model setup
