@@ -16,7 +16,7 @@ def clean_answer(text):
     return text.strip()
 
 # ✅ Streamlit setup
-st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
+st.set_page_config(page_title="IGIDRLib Chatbot", page_icon="")
 st.title("🤖 IGIDRLIB Chatbot")
 st.markdown("Ask any question about IGIDR Library.")
 
