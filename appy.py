@@ -16,9 +16,9 @@ def clean_answer(text):
     return text.strip()
 
 # ✅ Streamlit setup
-st.set_page_config(page_title="IGIDRLib Chatbot", page_icon="")
-st.title("🤖 IGIDRLIB Chatbot")
-st.markdown("Ask any question about IGIDR Library.")
+st.set_page_config(page_title="LibAI Chatbot", page_icon="")
+st.title("🤖 LibAI Chatbot")
+st.markdown("Ask anything about IGIDR Library.")
 
 # 📦 Load or build vectorstore
 if not os.path.exists("faiss_index"):
