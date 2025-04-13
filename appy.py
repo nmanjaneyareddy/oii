@@ -4,12 +4,11 @@ from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
 
-# 🎛️ Streamlit page setup
-st.set_page_config(page_title="📚 IGIDRLib Chatbot", page_icon="")
+st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
 st.title("🤖 IGIDRLIB Chatbot")
-st.markdown("Ask anything about your Library.")
+st.markdown("Ask any question about IGIDR Library.")
 
-# 📦 Load or build vectorstore
+# Load or build vectorstore
 if not os.path.exists("faiss_index"):
     with st.spinner("🔄 Processing documents..."):
         docs = load_documents()
@@ -18,28 +17,26 @@ if not os.path.exists("faiss_index"):
 else:
     vectorstore = load_vector_store()
 
-# 🤖 Setup QA chain
 qa_chain = setup_qa_chain(vectorstore)
 
-# 💬 Initialize chat history
+# Chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# 📩 User chat input
+# User input
 user_input = st.chat_input("Ask about IGIDR Library...")
 
 if user_input:
     with st.spinner("🤖 Thinking..."):
         result = qa_chain({"query": user_input})
-        answer = result.get("result", "").strip()
+        answer = result.get("result", "")
 
-        # Save to session chat history
         st.session_state.chat_history.append(("user", user_input))
         st.session_state.chat_history.append(("bot", answer))
 
-# 💬 Display chat history
+# Display history
 for role, msg in st.session_state.chat_history:
     if role == "user":
-        st.chat_message("user").write(msg)
+        st.chat_message("user").write(f"❓ {msg}")
     else:
         st.chat_message("assistant").write(f"🤖 {msg}")
