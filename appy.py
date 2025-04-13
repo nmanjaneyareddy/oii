@@ -28,15 +28,6 @@ if query:
         result = qa_chain({"query": query})
         answer = result["result"].strip()
 
-        # Optional: Strip verbose patterns (last filter)
-        for prefix in [
-            "Based on the context", 
-            "According to the documents",
-            "Use the following pieces of context"
-        ]:
-            if answer.lower().startswith(prefix.lower()):
-                answer = answer.split(":", 1)[-1].strip()
-
         st.markdown("### ❓ **Question**")
         st.write(query)
         st.markdown("### 🤖 **Answer**")
