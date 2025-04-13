@@ -10,6 +10,7 @@ def clean_answer(answer: str) -> str:
     patterns_to_strip = [
         r"^use the following.*?\n",    # Removes "Use the following context..."
         r"^context:.*?\n",             # Removes "Context: ..."
+        r"^answer[:,]?\s*",            # Removes "Answer:"
     ]
     for pattern in patterns_to_strip:
         answer = re.sub(pattern, "", answer, flags=re.IGNORECASE | re.DOTALL)
