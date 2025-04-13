@@ -16,7 +16,7 @@ def setup_qa_chain(vectorstore):
 
     # Clean prompt — no verbose instructions
     prompt = PromptTemplate.from_template("""
-Answer concisely based only on the context below.but don't dispaly this context to the user.
+Answer concisely based only on the context below.
 
 Context:
 {context}
@@ -30,7 +30,7 @@ Answer:
     parser = StrOutputParser()
 
     # Chain together prompt → model → parser
-    chain = prompt | llm | parser
+    chain = prompt | parser
 
     # Wrap this into a callable function
     def qa_chain(input_dict):
