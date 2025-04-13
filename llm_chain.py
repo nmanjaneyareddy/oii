@@ -4,7 +4,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 def setup_qa_chain(vectorstore):
-    repo_id = "tiiuae/falcon-7b-instruct"
+    repo_id = "declare-lab/flan-alpaca-base"
     token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     # HuggingFace model setup
