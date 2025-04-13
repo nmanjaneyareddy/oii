@@ -19,7 +19,6 @@ def setup_qa_chain(vectorstore):
         template="""Answer the question using the context. Be specific and brief.
 
 Question: {question}
-Context: {context}
 Answer:"""
     )
 
