@@ -4,8 +4,8 @@ from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
 
-st.title("📚 RAG Chatbot (PDF + HTML)")
-st.write("Ask any question based on the documents.")
+st.title("📚 IGIDRLIB Chatbot)")
+st.write("Ask any question about IGIDR Library")
 
 # Step 1: Load or build vectorstore
 if not os.path.exists("faiss_index"):
@@ -20,7 +20,6 @@ else:
 qa_chain = setup_qa_chain(vectorstore)
 
 # Step 3: Chat interface
-st.title("📚 Ask me")
 query = st.chat_input("Ask about IGIDR Library")
 
 if query:
