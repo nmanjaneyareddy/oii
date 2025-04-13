@@ -16,7 +16,7 @@ def setup_qa_chain(vectorstore):
 
     # Clean prompt — no verbose instructions
     prompt = PromptTemplate.from_template("""
-Answer concisely based only on the context below.
+You are a helpful assistant. Answer the question using the context below. Do not repeat the context or question in your answer.
 
 Context:
 {context}
@@ -26,6 +26,7 @@ Question:
 
 Answer:
 """)
+
 
     parser = StrOutputParser()
 
