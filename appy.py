@@ -35,7 +35,6 @@ if user_input:
 
         # Optional: strip known verbose starts
         def clean_answer(answer: str) -> str:
-            # Define known verbose intros to strip (case-insensitive)
             patterns_to_strip = [
             r"^based on the context[:,]?\s*",
             r"^according to (the )?document[s]?[,:]?\s*",
