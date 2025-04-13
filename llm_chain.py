@@ -1,13 +1,12 @@
+import streamlit as st
 from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
-import os
 
 def setup_qa_chain(vectorstore):
     repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
-    huggingfacehub_api_token = os.environ.get(secret_key)
 
-    if not huggingfacehub_api_token:
-        raise ValueError("Please set the HUGGINGFACEHUB_API_TOKEN environment variable.")
+    # ✅ Access correct secret key
+    huggingfacehub_api_token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     llm = HuggingFaceHub(
         repo_id=repo_id,
@@ -20,4 +19,5 @@ def setup_qa_chain(vectorstore):
         retriever=vectorstore.as_retriever(),
         return_source_documents=True
     )
+
     return qa_chain
