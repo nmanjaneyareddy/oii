@@ -4,13 +4,6 @@ from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
 
-st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
-st.title("🤖 IGIDRLIB Chatbot")import streamlit as st
-from loaders import load_documents, split_documents
-from vectorstore import create_vector_store, load_vector_store
-from llm_chain import setup_qa_chain
-import os
-
 st.set_page_config(page_title="IGIDR Library Chatbot", page_icon="📚")
 st.title("📚 IGIDRLIB Chatbot")
 st.write("Ask any question about IGIDR Library")
