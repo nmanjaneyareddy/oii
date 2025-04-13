@@ -30,14 +30,14 @@ Answer:
     parser = StrOutputParser()
 
     # Chain together prompt → model → parser
-    chain = prompt | llm | parser
+    chain = prompt | model | parser
 
     # Wrap this into a callable function
     def qa_chain(input_dict):
         retriever = vectorstore.as_retriever()
         docs = retriever.get_relevant_documents(input_dict["query"])
         context = "\n\n".join(doc.page_content for doc in docs)
-        result = chain.invoke({"context": context, "question": question})
+        result = chain.invoke({"context": context, "question":  input_dict["query"]})
         return {"result": result.strip()}
 
     return qa_chain
