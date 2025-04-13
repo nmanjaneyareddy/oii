@@ -3,6 +3,18 @@ from loaders import load_documents, split_documents
 from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
+import re
+
+# 🧼 Clean up verbose LLM output
+def clean_answer(answer: str) -> str:
+    patterns_to_strip = [
+        r"^use the following.*?\n",    # Removes "Use the following context..."
+        r"^context:.*?\n",             # Removes "Context: ..."
+        r"^answer[:,]?\s*",            # Removes "Answer:"
+    ]
+    for pattern in patterns_to_strip:
+        answer = re.sub(pattern, "", answer, flags=re.IGNORECASE | re.DOTALL)
+    return answer.strip()
 
 # 🎛️ Streamlit page setup
 st.set_page_config(page_title="📚 IGIDRLIB Chatbot", page_icon="🤖")
@@ -31,15 +43,16 @@ user_input = st.chat_input("Ask about IGIDR Library...")
 if user_input:
     with st.spinner("🤖 Thinking..."):
         result = qa_chain({"query": user_input})
-        answer = result.get("result", "").strip()
+        raw_answer = result.get("result", "").strip()
+        answer = clean_answer(raw_answer)
 
-        # Save to session chat history
+        # ✅ Save question and cleaned answer to chat history
         st.session_state.chat_history.append(("user", user_input))
         st.session_state.chat_history.append(("bot", answer))
 
-# 💬 Display chat history
+# 💬 Display chat history (user + bot)
 for role, msg in st.session_state.chat_history:
     if role == "user":
-        st.chat_message("user").write(msg)
+        st.chat_message("user").write(f"❓ {msg}")
     else:
         st.chat_message("assistant").write(f"🤖 {msg}")
