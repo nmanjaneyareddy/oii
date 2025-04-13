@@ -4,7 +4,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 def setup_qa_chain(vectorstore):
-    repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
+    repo_id = "mistralai/Mixtral-8x7B-Instruct-v0.1"
     token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     # HuggingFace model setup
