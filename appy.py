@@ -3,6 +3,11 @@ from loaders import load_documents, split_documents
 from vectorstore import create_vector_store, load_vector_store
 from llm_chain import setup_qa_chain
 import os
+import asyncio
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.run(asyncio.sleep(0))
 
 st.set_page_config(page_title="IGIDR Library Chatbot", page_icon="📚")
 st.title("📚 IGIDRLIB Chatbot")
