@@ -1,11 +1,10 @@
 import streamlit as st
 from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 
 def setup_qa_chain(vectorstore):
     repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
-
-    # ✅ Access correct secret key
     huggingfacehub_api_token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     llm = HuggingFaceHub(
@@ -14,10 +13,24 @@ def setup_qa_chain(vectorstore):
         model_kwargs={"temperature": 0.2, "max_new_tokens": 512}
     )
 
+    # ✅ Minimal clean prompt (no context instructions)
+    custom_prompt = PromptTemplate(
+        input_variables=["context", "question"],
+        template="""
+Answer the following question based only on the provided context.
+
+Question: {question}
+Context: {context}
+Answer:
+"""
+    )
+
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(),
-        return_source_documents=True
+        chain_type="stuff",
+        chain_type_kwargs={"prompt": custom_prompt},
+        return_source_documents=False  # ✅ disables source chunks
     )
 
     return qa_chain
