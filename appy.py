@@ -27,8 +27,3 @@ if query:
         result = qa_chain({"query": query})
         st.chat_message("user").write(query)
         st.chat_message("assistant").write(result["result"])
-
-#        with st.expander("📄 Source Chunks"):
- #           for doc in result["source_documents"]:
-  #              st.markdown(f"**Source:** {doc.metadata.get('source', 'Unknown')}")
-   #             st.markdown(doc.page_content[:500] + "...")
