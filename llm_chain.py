@@ -1,6 +1,6 @@
-from langchain.prompts import PromptTemplate
 from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 import streamlit as st
 
 def setup_qa_chain(vectorstore):
@@ -10,20 +10,17 @@ def setup_qa_chain(vectorstore):
     llm = HuggingFaceHub(
         repo_id=repo_id,
         huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.2, "max_new_tokens": 512}
+        model_kwargs={"temperature": 0.2, "max_new_tokens": 300}
     )
 
-    # ✅ Clean, strict prompt – no fluff allowed
+    # Strict prompt — no instructions, no overexplaining
     prompt = PromptTemplate(
         input_variables=["context", "question"],
-        template="""
-Only answer the question using the context below.
-If a relevant link is mentioned, include it.
+        template="""Answer the question as briefly and accurately as possible.
 
 Question: {question}
 Context: {context}
-Answer in 2-3 sentences:
-"""
+Answer:"""
     )
 
     return RetrievalQA.from_chain_type(
