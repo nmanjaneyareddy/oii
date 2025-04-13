@@ -9,7 +9,7 @@ def load_documents():
 
     # Load PDF
     if os.path.exists("data/igidr_library_details.pdf"):
-        pdf_loader = PyPDFLoader("data/igidr_library_detailsple.pdf")
+        pdf_loader = PyPDFLoader("data/igidr_library_details.pdf")
         docs += pdf_loader.load()
     else:
         print("⚠️ PDF file not found at data/igidr_library_details.pdf")
