@@ -20,14 +20,16 @@ else:
 qa_chain = setup_qa_chain(vectorstore)
 
 # Step 3: Chat interface
-query = st.text_input("Ask a question:")
-if query:
-    with st.spinner("Generating answer..."):
-        result = qa_chain({"query": query})
-        st.write("### 📌 Answer:")
-        st.write(result["result"])
+st.title("📚 Ask me")
+query = st.chat_input("Ask about IGIDR Library")
 
-        with st.expander("📄 Source Chunks"):
-            for doc in result["source_documents"]:
-                st.markdown(f"**Source:** {doc.metadata.get('source', 'Unknown')}")
-                st.markdown(doc.page_content[:500] + "...")
+if query:
+    with st.spinner("Thinking..."):
+        result = qa_chain({"query": query})
+        st.chat_message("user").write(query)
+        st.chat_message("assistant").write(result["result"])
+
+#        with st.expander("📄 Source Chunks"):
+ #           for doc in result["source_documents"]:
+  #              st.markdown(f"**Source:** {doc.metadata.get('source', 'Unknown')}")
+   #             st.markdown(doc.page_content[:500] + "...")
