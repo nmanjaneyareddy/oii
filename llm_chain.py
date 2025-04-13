@@ -1,7 +1,7 @@
+import streamlit as st
 from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
-import streamlit as st
 
 def setup_qa_chain(vectorstore):
     repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
@@ -13,12 +13,13 @@ def setup_qa_chain(vectorstore):
         model_kwargs={"temperature": 0.1, "max_new_tokens": 300}
     )
 
-    # Strict concise prompt
     prompt = PromptTemplate(
         input_variables=["context", "question"],
-        template="""Answer the question using the context. Be specific and brief.
+        template="""
+Answer the user's question using the context provided. Be specific, concise, and do not include instructions or unnecessary text.
 
 Question: {question}
+Context: {context}
 Answer:"""
     )
 
