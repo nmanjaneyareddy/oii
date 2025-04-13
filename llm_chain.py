@@ -30,7 +30,7 @@ Answer:
     parser = StrOutputParser()
 
     # Chain together prompt → model → parser
-    chain = prompt | model | parser
+    chain = prompt | llm | parser
 
     # Wrap this into a callable function
     def qa_chain(input_dict):
