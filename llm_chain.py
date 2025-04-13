@@ -11,7 +11,7 @@ def setup_qa_chain(vectorstore):
     llm = HuggingFaceHub(
         repo_id=repo_id,
         huggingfacehub_api_token=token,
-        model_kwargs={"temperature": 0.5, "max_new_tokens": 300}
+        model_kwargs={"temperature": 0.3, "max_new_tokens": 300}
     )
 
     # Clean prompt — no verbose instructions
