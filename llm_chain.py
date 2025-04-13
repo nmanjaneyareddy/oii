@@ -4,7 +4,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 def setup_qa_chain(vectorstore):
-    repo_id = "google/flan-t5-small"
+    repo_id = "google/gemma-3-1b-it"
     token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
 
     # HuggingFace model setup
