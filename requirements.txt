@@ -1,5 +1,6 @@
-streamlit
-langchain
+streamlit>=1.33
+langchain>=0.1.14
+langchain-community>=0.0.30
 faiss-cpu
 sentence-transformers
 pypdf
