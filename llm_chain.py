@@ -1,27 +1,27 @@
 import streamlit as st
-from langchain_community.llms import HuggingFaceHub
+from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 
 def setup_qa_chain(vectorstore):
-    repo_id = "mistralai/Mistral-7B-Instruct-v0.1"
-    token = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+    # ✅ DeepSeek API Key & Base URL
+    deepseek_api_key = st.secrets["DEEPSEEK_API_KEY"]
+    deepseek_base_url = "https://api.deepseek.com/v1"  # Use the actual base if different
 
-    # Initialize the language model from Hugging Face
-    llm = HuggingFaceHub(
-        repo_id=repo_id,
-        huggingfacehub_api_token=token,
-        model_kwargs={
-            "temperature": 0.2,
-            "max_new_tokens": 512
-        }
+    # ✅ Initialize the LLM
+    llm = ChatOpenAI(
+        model_name="deepseek-chat",     # Or the actual model name like "deepseek-coder"
+        temperature=0.2,
+        max_tokens=512,
+        openai_api_key=deepseek_api_key,
+        openai_api_base=deepseek_base_url
     )
 
-    # A mild custom prompt that gives enough flexibility to the LLM
+    # ✅ Prompt
     prompt = PromptTemplate(
         input_variables=["context", "question"],
         template="""
-Use the following context to answer the user's question.
+Use the following context to answer the user's question clearly and concisely.
 
 Context:
 {context}
@@ -33,7 +33,6 @@ Answer:
 """
     )
 
-    # Create a RetrievalQA chain with this prompt
     return RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(),
