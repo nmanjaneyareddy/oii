@@ -2,6 +2,7 @@
 
 A lightweight RAG (Retrieval-Augmented Generation) chatbot using:
 - 🧠 Open-source LLM from Hugging Face (e.g., Mistral-7B)
+- 🤖 **Question Answering** powered by **DeepSeek LLM API**
 - 📄 PDF + HTML as document sources
 - 🧲 FAISS for vector search
 - 🔍 LangChain for orchestration
