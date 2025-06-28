@@ -17,7 +17,7 @@ def clean_answer(text):
 
 # ✅ Streamlit setup
 st.set_page_config(page_title="oii-AI Assistant", page_icon="")
-st.title("🤖 OII-AI Assistant")
+st.markdown("🤖 OII-AI Assistant")
 st.markdown("Ask anything about OII database.")
 
 # 📦 Load or build vectorstore
