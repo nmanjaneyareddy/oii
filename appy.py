@@ -16,13 +16,13 @@ def clean_answer(text):
     return text.strip()
 
 # ✅ Streamlit setup
-st.set_page_config(page_title="LibAI Chatbot", page_icon="")
-st.title("🤖 LibAI Chatbot")
-st.markdown("Ask anything about IGIDR Library.")
+st.set_page_config(page_title="oii-AI Assistant", page_icon="")
+st.title("🤖 OII-AI Assistant")
+st.markdown("Ask anything about OII database.")
 
 # 📦 Load or build vectorstore
 if not os.path.exists("faiss_index"):
-    with st.spinner("🔄 Processing documents..."):
+    with st.spinner("🔄 Searching documents..."):
         docs = load_documents()
         chunks = split_documents(docs)
         vectorstore = create_vector_store(chunks)
@@ -40,7 +40,7 @@ if "chat_history" not in st.session_state:
 user_input = st.chat_input("Ask about IGIDR Library...")
 
 if user_input:
-    with st.spinner("🤖 Thinking..."):
+    with st.spinner("🤖 Getting..."):
         result = qa_chain({"query": user_input})
         raw_answer = result.get("result", "")
         answer = clean_answer(raw_answer)  # Clean the output before displaying
@@ -53,4 +53,4 @@ for role, msg in st.session_state.chat_history:
     if role == "user":
         st.chat_message("user").write(f"Me: {msg}")
     else:
-        st.chat_message("assistant").write(f"LibAI Assistant: {msg}")
+        st.chat_message("assistant").write(f"OII-AI Assistant: {msg}")
