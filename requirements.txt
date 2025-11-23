@@ -1,10 +1,23 @@
+# Core app
 streamlit>=1.33
-langchain==0.0.240
+
+# LangChain ecosystem - compatible set
+langchain>=0.1.14,<0.2.0
 langchain-community==0.0.30
+# Ensure langsmith falls in the range expected by these releases:
+langsmith>=0.1.0,<0.2.0
+
+# Useful parsing / IO
 pypdf>=3.0.0
 beautifulsoup4>=4.12.2
-huggingface-hub>=0.16.4
-openai>=1.0.0
 requests>=2.31.0
 tqdm>=4.66.1
+huggingface-hub>=0.16.4
+openai>=1.0.0
+
+# Vector store (avoid faiss binary build problems on Streamlit Cloud)
 chromadb>=0.3.30
+
+# OPTIONAL: sentence-transformers (may pull in torch; see note below)
+sentence-transformers>=2.2.2
+# faiss-cpu==1.7.4   # keep commented out — likely to fail on hosted builders
