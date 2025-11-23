@@ -1,15 +1,14 @@
 streamlit>=1.33
-langchain>=0.1.14
-langchain-community>=0.0.30
-faiss-cpu
-sentence-transformers
-pypdf
-beautifulsoup4
-huggingface_hub
-openai>=1.0
-langchain>=0.1
-# upgrade LangChain to a reasonably recent stable release
-pip install --upgrade "langchain>=0.0.240"
-
-# or pin to a specific version that you know works with your code:
-pip install "langchain==0.0.240"
+langchain==0.0.240
+langchain-community==0.0.30
+sentence-transformers>=2.2.2
+pypdf>=3.0.0
+beautifulsoup4>=4.12.2
+huggingface-hub>=0.16.4
+openai>=1.0.0
+chromadb>=0.3.30
+bs4>=0.0.1
+requests>=2.31.0
+tqdm>=4.66.1
+# optional (only if you know faiss works in your environment):
+# faiss-cpu==1.7.4
