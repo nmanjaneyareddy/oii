@@ -8,3 +8,8 @@ beautifulsoup4
 huggingface_hub
 openai>=1.0
 langchain>=0.1
+# upgrade LangChain to a reasonably recent stable release
+pip install --upgrade "langchain>=0.0.240"
+
+# or pin to a specific version that you know works with your code:
+pip install "langchain==0.0.240"
